@@ -1,0 +1,87 @@
+<html>
+    <script src="https:code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        $(()=>{
+          console.log("Page loaded successfully");
+          $('#BookId').blur(()=>{
+            console.log("blur event occured");
+            
+            let input = { bookId :$('#bookId').val()}
+            let ajaxparameters = {
+                data : input,
+                url : "//http://localhost:8081/getDetails",
+                type:'get',
+                datatype: 'JSON',
+                success:(datafromserver)=>{
+                    if(datafromserver.status===true){
+                        console.log("Data fetched successfully");
+                        $('#bookName').val(datafromserver.book.bookname);
+                        $('#price').val(datafromserver.bookprice);
+                        $('msg').text("BookName is found");
+                        $('#update').prop("disabled",false);
+                    }
+                    else{
+                        $('#bookName').val("");
+                        $('#price').val("");
+                        $('#msg').text("BookName not found");
+                    }
+                },
+                error:(errorfromserver)=>{
+                    console.log("Error occured"+errorfromserver);
+                }
+            }
+            
+            $.ajax(ajaxparameters);
+        }); 
+        $('#update').blur(()=>{
+            console.log("Update button clicked");
+            
+            let input = { bookId :$('#bookId').val(),bookName:$('#bookName').val()}
+            let ajaxparameters = {
+                data : input,
+                url : "//http://localhost:8081/updateDetails",
+                type:'get',
+                datatype: 'JSON',
+                success:(datafromserver)=>{
+                    if(datafromserver.status===true){
+                        console.log("Data fetched successfully");
+                        $('#bookName').val(datafromserver.book.bookname);
+                        $('#price').val(datafromserver.bookprice);
+                        $('msg').text("BookName updated Successfully");
+                        $('#update').prop("disabled",false);
+                    }
+                    else{
+                        $('#bookName').val("");
+                        $('#price').val("");
+                        $('#msg').text("BookName not updated");
+                    }
+                },
+                error:(errorfromserver)=>{
+                    console.log("Error occured"+errorfromserver);
+                }
+            }
+            
+            $.ajax(ajaxparameters);
+        }); 
+        
+        
+
+
+        });
+    </script>
+    <body>
+       
+            
+        <p>BookId</p><input type="text" id="bookId" placeholder="Enter book Id" name="bookId">
+        <br>
+        <p>BookName</p><input type="text" id="bookName" placeholder="Enter Book name" name="bookName">
+        <br>
+        <p>Price</p><input type="text" id="bookPrice" placeholder="Enter book Price" name="bookPrice">
+        
+        <input type="button" name="getDatails" id="BookId" value="Update">
+        <input type="button" name="updateDetails" id="update" value="Update">
+    
+        <span id="msg"></span>
+        </form>
+    </body>
+</html>
